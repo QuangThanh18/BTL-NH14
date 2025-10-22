@@ -10,7 +10,7 @@ struct Cell {
     bool daDuocMo;
     int cacMinXungQuanh;
 };
-Cell board[10][10]; // bien toan cuc
+Cell board[10][10]; 
 
 // Danh sach lien ket don
 struct Node {
@@ -21,26 +21,26 @@ struct Node {
 // Danh sach lien ket cac o da mo
 struct OpenCell {
     int hang, cot;
-    OpenCell *next; // cho biet phan tu tiep theo
+    OpenCell *next; 
 };
 
 // Cau truc  nguoi choi
 struct Player {
     char name[50];
     int score;
-    Player *left;  // tra diem ngchoi co diem thap
-    Player *right; // tra diem ngchoi co diem cao
+    Player *left;  
+    Player *right; 
 };
 
 
 // Them ngchoi vao danh sach
 Player *insertPlayer(Player *root, char ten[], int diem) {
-    if (root == NULL) { // KT neu cay Rong~
-        Player *p = new Player;   // cap phat them nut
-        strcpy(p->name, ten);     // sao chep ten
-        p->score = diem;          // gan diem
+    if (root == NULL) { 
+        Player *p = new Player;   
+        strcpy(p->name, ten);     
+        p->score = diem;          
         p->left = p->right = NULL;
-        return p;                 // tra ve nut moi
+        return p;                 
     }
     if (diem < root->score)
         root->left = insertPlayer(root->left, ten, diem);
@@ -51,49 +51,49 @@ Player *insertPlayer(Player *root, char ten[], int diem) {
 
 // In danh sach ngchoi theo thu tu tang diem
 void inOrder(Player *root) {
-    if (root != NULL) { // kiem tra nut hien tai co ton tai hay k?Neu NULL thi dung
-        inOrder(root->left);// goi ham duyet tu nhanh trai
-        cout << root->name << " - " << root->score << endl; // in ra thong tin ngchoi nhanh trai
+    if (root != NULL) { 
+        inOrder(root->left);
+        cout << root->name << " - " << root->score << endl; 
         inOrder(root->right);
     }
 }
 //Khoi tao ra ban co
 void taoBanCo() {
-    srand(time(0)); //Khoi tao bo sinh so random (time(0)): de chay chuong trinh gia tri khac nhau
-    for (int i = 0; i < 10; i++) { // 2 vong lap de duyet cac cac o trong ban co
+    srand(time(0));  
+    for (int i = 0; i < 10; i++) { 
         for (int j = 0; j < 10; j++) {
-            board[i][j].laMin = false; // khoi tao o ban dau k co min
-            board[i][j].daDuocMo = false;// o chua duoc mo
-            board[i][j].cacMinXungQuanh = 0;// chua co min xung quanh
+            board[i][j].laMin = false; 
+            board[i][j].daDuocMo = false;
+            board[i][j].cacMinXungQuanh = 0;
         }
     }
 	// Ðat mìn ngau nhiên
-    int count = 0; // dung de dem so min da dat
+    int count = 0; 
     while (count < 10) {
-        int x = rand() % 10; // tao ra 1 so ngau nhien tu 0-9
+        int x = rand() % 10; 
         int y = rand() % 10;
-        if (!board[x][y].laMin) { // kiem tra vi tri nhap (hang,cot) co phai min
+        if (!board[x][y].laMin) { 
             board[x][y].laMin = true;
             count++;
         }
     }
      // Tính so mìn xung quanh
     for (int i = 0; i < 10; i++) {
-        for (int j = 0; j < 10; j++) { // 2 vong lap de duyet tung o
-            if (board[i][j].laMin) continue; // kt neu la min thi bo qua 0 can dem
+        for (int j = 0; j < 10; j++) { 
+            if (board[i][j].laMin) continue; 
             int dem = 0;
             for (int dx = -1; dx <= 1; dx++) {
-                for (int dy = -1; dy <= 1; dy++) { // duyet qua cac o lan can de kiem tra so min xung quanh
-                    int nx = i + dx, ny = j + dy; // tinh toa do o hien tai
-                    if (nx >= 0 && nx < 10 && ny >= 0 && ny < 10) // kt vi tri o co hop le hay k?	
-                        if (board[nx][ny].laMin) dem++; // neu co min xung quanh thi tang bien dem
+                for (int dy = -1; dy <= 1; dy++) { 
+                    int nx = i + dx, ny = j + dy; 
+                    if (nx >= 0 && nx < 10 && ny >= 0 && ny < 10) 
+                        if (board[nx][ny].laMin) dem++; 
                 }
             }
             board[i][j].cacMinXungQuanh = dem;
         }
     }
 }
-void hienThiBanCo(bool showAll = false) { //chi hien thi so o da ma con`=true thi khi thua
+void hienThiBanCo(bool showAll = false) { 
     // In toa do hang cot
 	cout << "\n    ";
     for (int j = 0; j < 10; j++) cout << j << " ";
@@ -103,36 +103,36 @@ void hienThiBanCo(bool showAll = false) { //chi hien thi so o da ma con`=true th
         cout << i << " | ";
         //vong lap qua tung o
         for (int j = 0; j < 10; j++) {
-            if (showAll) { // neu hien thi toan bo ban co
-                if (board[i][j].laMin) cout << "* "; // neu la min thi in ra dau *
-                else cout << board[i][j].cacMinXungQuanh << " "; // k thi in ra so min xung quanh
+            if (showAll) { 
+                if (board[i][j].laMin) cout << "* "; 
+                else cout << board[i][j].cacMinXungQuanh << " "; 
             } else if (!board[i][j].daDuocMo)
-                cout << "# "; // hien thi o ngchoi chua mo
+                cout << "# "; 
             else if (board[i][j].laMin)
-                cout << "* "; // boc trung min
+                cout << "* "; 
             else
-                cout << board[i][j].cacMinXungQuanh << " "; // con lai cac o kh co min va in so luong min xung quanh
+                cout << board[i][j].cacMinXungQuanh << " "; 
         }
         cout << endl;
     }
 }
 // Mo o
 bool moO(int x, int y) {
-    if (x < 0 || x >= 10 || y < 0 || y >= 10) return true; // neu chon toa do ban co out range thi k lam j
-    if (board[x][y].daDuocMo) return true; // neu o da dc mo thi cung k lam j
+    if (x < 0 || x >= 10 || y < 0 || y >= 10) return true; 
+    if (board[x][y].daDuocMo) return true; 
 
-    board[x][y].daDuocMo = true; // danh dau lai o da mo
-    if (board[x][y].laMin) return false; // tra ve false neu nhu mo trung min
+    board[x][y].daDuocMo = true; 
+    if (board[x][y].laMin) return false; 
 
     return true;
 }
 
 
-// ktra neu o da mo het-> thang, con chua het-> chua thangh
+// ktra neu o da mo het-> thang, con chua het-> chua thang
 bool kiemTraThang() {
-    for (int i = 0; i < 10; i++) // duyet qua tung hang
-        for (int j = 0; j < 10; j++) // duyet qua tung cot
-            if (!board[i][j].laMin && !board[i][j].daDuocMo) // ktr k phai min va chua dc mmo thi false else true
+    for (int i = 0; i < 10; i++) 
+        for (int j = 0; j < 10; j++) 
+            if (!board[i][j].laMin && !board[i][j].daDuocMo) 
                 return false;
     return true;
 }
@@ -141,15 +141,15 @@ int choiGame() {
     int luotMo = 0; // dem  so luot an toan
     char choice;
 
-    taoBanCo(); // goi ham
-    while (true) { // dung de hien thi ban co va choi toi khi thang or thua
+    taoBanCo(); // 
+    while (true) { 
         hienThiBanCo(); // goi ham
         cout << "\nNhap toa do (hang cot): ";
         cin >> x >> y;
 
 		if (cin.fail()) {
-            cin.clear(); // xóa tr?ng thái l?i
-            cin.ignore(1000, '\n'); // b? ph?n còn l?i c?a dòng
+            cin.clear(); 
+            cin.ignore(1000, '\n'); 
 
             cout << "\nBan da nhap ky tu khong hop le!\n";
             cout << "Ban co muon thoat game khong? (y/n): ";
@@ -159,15 +159,15 @@ int choiGame() {
                 cout << "\nBan da chon thoat.\n";
                 hienThiBanCo(true);
                 cout << "So luot mo an toan: " << luotMo << endl;
-                return luotMo; // thoát
+                return luotMo; 
             } else {
                 cout << "\nTiep tuc choi...\n";
-                continue; // quay l?i vòng l?p
+                continue;
             }
         }
         if (!moO(x, y)) { // goi ham
             cout << "\n?? Boom! Ban da mo trung min!\n";
-            hienThiBanCo(true); // goi ham cho ng choi thay
+            hienThiBanCo(true); 
             cout << "So luot mo an toan: " << luotMo << endl; 
             return luotMo; 
         }
@@ -184,7 +184,7 @@ int choiGame() {
 }
 
 int main() {
-    Player *playerTree = NULL; // cay rong ban dau
+    Player *playerTree = NULL; 
     char ten[50];
     int diem;
     int n;
@@ -200,7 +200,7 @@ int main() {
         cin >> ten;
 
         cout << "\n--- Luot choi cua " << ten << " ---\n";
-        diem = choiGame();  // Goi ham choi game, tra ve diem
+        diem = choiGame(); 
 
         if (diem == 0)
             cout << ten << " da thoat som.\n";
